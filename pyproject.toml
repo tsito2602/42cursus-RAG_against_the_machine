@@ -20,3 +20,7 @@ dev = [
 
 [tool.mypy]
 exclude = ["^data/", "^\\.venv/"]
+
+[[tool.mypy.overrides]]
+module = ["fire", "fire.*"]
+ignore_missing_imports = true
