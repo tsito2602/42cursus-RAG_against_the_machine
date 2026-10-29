@@ -35,9 +35,9 @@ class MinimalAnswer(MinimalSearchResults):
 
 class StudentSearchResults(BaseModel):
     search_results: list[MinimalSearchResults]
-    k: int
+    k: int = Field(gt=0)
 
 
 class StudentSearchResultsAndAnswer(BaseModel):
     search_results: list[MinimalAnswer]
-    k: int
+    k: int = Field(gt=0)
