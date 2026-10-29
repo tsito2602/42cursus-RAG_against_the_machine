@@ -12,19 +12,53 @@ DEFAULT_K = (1, 3, 5, 10)
 
 
 class RagCLI:
-    def index(self, max_chunk_size: int = 2000) -> None: ...
+    """Command line interface of the RAG system, run with Python Fire."""
 
-    def search(self, query: str, k: int) -> None: ...
+    def index(self, max_chunk_size: int = 2000) -> None:
+        """Chunk the files in data/raw/ and save the index to data/processed/.
+
+        Args:
+            max_chunk_size: Maximum number of characters per chunk.
+        """
+
+    def search(self, query: str, k: int) -> None:
+        """Print the top-k sources for a single query.
+
+        Args:
+            query: Question to search for.
+            k: Number of sources to retrieve.
+        """
 
     def search_dataset(
         self, dataset_path: str, k: int, save_directory: str
-    ) -> None: ...
+    ) -> None:
+        """Search every question in a dataset and save StudentSearchResults.
 
-    def answer(self, query: str, k: int) -> None: ...
+        Args:
+            dataset_path: Path to the dataset JSON.
+            k: Number of sources to retrieve per question.
+            save_directory: Directory to write the search results JSON to.
+        """
+
+    def answer(self, query: str, k: int) -> None:
+        """Print an answer to a single query from the retrieved context.
+
+        Args:
+            query: Question to answer.
+            k: Number of sources to use as context.
+        """
 
     def answer_dataset(
         self, student_search_results_path: str, save_directory: str
-    ) -> None: ...
+    ) -> None:
+        """Answer every question in search results and save the answers.
+
+        The output is a StudentSearchResultsAndAnswer JSON.
+
+        Args:
+            student_search_results_path: Path to the search results JSON.
+            save_directory: Directory to write the answers JSON to.
+        """
 
     def evaluate(
         self, student_search_results_path: str, dataset_path: str
@@ -52,7 +86,6 @@ class RagCLI:
             print(f"Error: Dataset {dataset_path} has no answered questions")
             return
 
-        # Duplicate question_ids keep the last entry, as moulinette does
         gold_sources = {q.question_id: q.sources for q in gold_questions}
         pred_sources = {
             r.question_id: r.retrieved_sources for r in student.search_results
