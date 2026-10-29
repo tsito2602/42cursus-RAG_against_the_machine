@@ -48,6 +48,10 @@ class RagCLI:
             q for q in dataset.rag_questions if isinstance(q, AnsweredQuestion)
         ]
 
+        if dataset.rag_questions and not gold_questions:
+            print(f"Error: Dataset {dataset_path} has no answered questions")
+            return
+
         # Duplicate question_ids keep the last entry, as moulinette does
         gold_sources = {q.question_id: q.sources for q in gold_questions}
         pred_sources = {
