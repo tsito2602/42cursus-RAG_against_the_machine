@@ -1,4 +1,5 @@
 """Recall@k evaluation of retrieved sources, compatible with moulinette."""
+
 from typing import TypeAlias
 
 from src.models import MinimalSource
