@@ -29,6 +29,12 @@ class RagCLI:
     def evaluate(
         self, student_search_results_path: str, dataset_path: str
     ) -> None:
+        """Print recall@k of the search results, as moulinette does.
+
+        Args:
+            student_search_results_path: Path to the search results JSON.
+            dataset_path: Path to the answered dataset JSON.
+        """
         try:
             with open(student_search_results_path, encoding="utf-8") as f:
                 student = StudentSearchResults.model_validate_json(f.read())
