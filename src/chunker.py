@@ -1,12 +1,8 @@
 """Split corpus files into chunks."""
-from typing import TypeAlias
-
 from src.models import Chunk
 
-Chunks: TypeAlias = list[Chunk]
 
-
-def chunk_python(file_path: str, text: str, chunk_size: int) -> Chunks:
+def chunk_python(file_path: str, text: str, chunk_size: int) -> list[Chunk]:
     """Split a Python file into chunks of at most chunk_size characters.
 
     Args:
@@ -17,7 +13,7 @@ def chunk_python(file_path: str, text: str, chunk_size: int) -> Chunks:
     Returns:
         The chunks in order of position in the file.
     """
-    chunks: Chunks = []
+    chunks: list[Chunk] = []
 
     text_length = len(text)
     for first in range(0, text_length, chunk_size):
@@ -35,7 +31,7 @@ def chunk_python(file_path: str, text: str, chunk_size: int) -> Chunks:
     return chunks
 
 
-def chunk_text(file_path: str, text: str, chunk_size: int) -> Chunks:
+def chunk_text(file_path: str, text: str, chunk_size: int) -> list[Chunk]:
     """Split a text file into chunks of at most chunk_size characters.
 
     Args:
@@ -46,7 +42,7 @@ def chunk_text(file_path: str, text: str, chunk_size: int) -> Chunks:
     Returns:
         The chunks in order of position in the file.
     """
-    chunks: Chunks = []
+    chunks: list[Chunk] = []
 
     text_length = len(text)
     for first in range(0, text_length, chunk_size):
