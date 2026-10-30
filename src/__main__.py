@@ -1,22 +1,14 @@
-from pathlib import Path
 from fire import Fire
-from pydantic import TypeAdapter, ValidationError
+from pydantic import ValidationError
 
-from src.chunker import Chunk, chunk_python, chunk_text
 from src.evaluator import (
     MAX_SOURCE_LENGTH,
     find_too_long_sources,
     recall_at_k,
 )
+from src.indexer import PROCESSED_DIR, build_index
 from src.models import AnsweredQuestion, RagDataset, StudentSearchResults
 
-RAW_DIR = Path("data/raw")
-PROCESSED_DIR = Path("data/processed")
-CHUNKERS = {
-    ".py": chunk_python,
-    ".md": chunk_text,
-    ".txt": chunk_text,
-}
 DEFAULT_K = (1, 3, 5, 10)
 
 
@@ -29,20 +21,7 @@ class RagCLI:
         Args:
             max_chunk_size: Maximum number of characters per chunk.
         """
-        chunks: list[Chunk] = []
-
-        for path in sorted(RAW_DIR.rglob("*")):
-            chunker = CHUNKERS.get(path.suffix)
-            if chunker is None or not path.is_file():
-                continue
-            with open(path, encoding="utf-8", newline="") as f:
-                text = f.read()
-            chunks.extend(chunker(str(path), text, max_chunk_size))
-
-        PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
-        with open(PROCESSED_DIR / "chunks.json", "wb") as f:
-            f.write(TypeAdapter(list[Chunk]).dump_json(chunks, indent=2))
-
+        build_index(max_chunk_size)
         print(f"Ingestion complete! Indices saved under {PROCESSED_DIR}/")
 
     def search(self, query: str, k: int) -> None:

@@ -1,18 +1,11 @@
-from src.models import MinimalSource
+from typing import TypeAlias
+from src.models import Chunk
+
+Chunks: TypeAlias = list[Chunk]
 
 
-class Chunk(MinimalSource):
-    """A span of a corpus file with its text.
-
-    Attributes:
-        text: Content of the file in the span.
-    """
-
-    text: str
-
-
-def chunk_python(file_path: str, text: str, chunk_size: int) -> list[Chunk]:
-    chunks: list[Chunk] = []
+def chunk_python(file_path: str, text: str, chunk_size: int) -> Chunks:
+    chunks: Chunks = []
 
     text_length = len(text)
     for first in range(0, text_length, chunk_size):
@@ -30,8 +23,8 @@ def chunk_python(file_path: str, text: str, chunk_size: int) -> list[Chunk]:
     return chunks
 
 
-def chunk_text(file_path: str, text: str, chunk_size: int) -> list[Chunk]:
-    chunks: list[Chunk] = []
+def chunk_text(file_path: str, text: str, chunk_size: int) -> Chunks:
+    chunks: Chunks = []
 
     text_length = len(text)
     for first in range(0, text_length, chunk_size):

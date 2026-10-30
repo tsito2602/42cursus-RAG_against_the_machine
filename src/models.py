@@ -98,3 +98,35 @@ class StudentSearchResultsAndAnswer(BaseModel):
 
     search_results: list[MinimalAnswer]
     k: int = Field(gt=0)
+
+
+class Chunk(MinimalSource):
+    """A span of a corpus file with its text.
+
+    Attributes:
+        text: Content of the file in the span.
+    """
+
+    text: str
+
+
+class ChunkList(BaseModel):
+    """Chunks of the corpus, saved by the index command.
+
+    Attributes:
+        chunks: Chunks, by chunk index.
+    """
+
+    chunks: list[Chunk]
+
+
+class BM25Index(BaseModel):
+    """An inverted index of chunks for BM25 search.
+
+    Attributes:
+        chunk_token_counts: Number of tokens in each chunk, by chunk index.
+        postings: Chunk index and term frequency for each term.
+    """
+
+    chunk_token_counts: list[int]
+    postings: dict[str, list[tuple[int, int]]]
