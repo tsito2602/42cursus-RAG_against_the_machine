@@ -1,3 +1,4 @@
+"""Build the chunk and BM25 indexes of the corpus."""
 from collections import Counter, defaultdict
 from pathlib import Path
 
@@ -15,6 +16,14 @@ CHUNKERS = {
 
 
 def build_bm25_index(chunks: list[Chunk]) -> BM25Index:
+    """Build a BM25 inverted index from chunks.
+
+    Args:
+        chunks: Chunks to index, by chunk index.
+
+    Returns:
+        The token count of each chunk and the postings of each token.
+    """
     chunk_token_counts: list[int] = []
     postings: defaultdict[str, list[tuple[int, int]]] = defaultdict(list)
 
@@ -29,6 +38,14 @@ def build_bm25_index(chunks: list[Chunk]) -> BM25Index:
 
 
 def build_index(max_chunk_size: int) -> None:
+    """Chunk the files in RAW_DIR and save the indexes to PROCESSED_DIR.
+
+    Only files with a suffix in CHUNKERS are indexed. The chunks are saved
+    to chunks.json and the BM25 index to bm25_index.json.
+
+    Args:
+        max_chunk_size: Maximum number of characters per chunk.
+    """
     chunks: list[Chunk] = []
 
     for path in sorted(RAW_DIR.rglob("*")):
