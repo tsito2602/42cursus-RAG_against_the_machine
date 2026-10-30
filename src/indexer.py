@@ -31,8 +31,8 @@ def build_bm25_index(chunks: list[Chunk]) -> BM25Index:
         tokens = tokenize(chunk.text)
         chunk_token_counts.append(len(tokens))
 
-        for token, terms_freq in Counter(tokens).items():
-            postings[token].append((chunk_id, terms_freq))
+        for token, term_freq in Counter(tokens).items():
+            postings[token].append((chunk_id, term_freq))
 
     return BM25Index(chunk_token_counts=chunk_token_counts, postings=postings)
 
