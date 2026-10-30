@@ -46,18 +46,30 @@ def build_index(max_chunk_size: int) -> None:
     Args:
         max_chunk_size: Maximum number of characters per chunk.
     """
+    if not RAW_DIR.is_dir():
+        raise FileNotFoundError(f"Corpus directory not found: {RAW_DIR}")
+
     chunks: list[Chunk] = []
 
     for path in sorted(RAW_DIR.rglob("*")):
         chunker = CHUNKERS.get(path.suffix)
+
         if chunker is None or not path.is_file():
             continue
-        with open(path, encoding="utf-8", newline="") as f:
-            text = f.read()
+
+        try:
+            with open(path, encoding="utf-8", newline="") as f:
+                text = f.read()
+        except (OSError, UnicodeDecodeError) as e:
+            print(f"Warning: skipped {path}: {e}")
+            continue
+
         chunks.extend(chunker(str(path), text, max_chunk_size))
 
-    bm25_index = build_bm25_index(chunks)
+    if not chunks:
+        raise ValueError(f"No files to index were found in {RAW_DIR}")
 
+    bm25_index = build_bm25_index(chunks)
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 
     with open(PROCESSED_DIR / "chunks.json", "w", encoding="utf-8") as f:

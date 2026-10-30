@@ -21,7 +21,12 @@ class RagCLI:
         Args:
             max_chunk_size: Maximum number of characters per chunk.
         """
-        build_index(max_chunk_size)
+        try:
+            build_index(max_chunk_size)
+        except (OSError, ValueError) as e:
+            print(f"Error: {e}")
+            return
+
         print(f"Ingestion complete! Indices saved under {PROCESSED_DIR}/")
 
     def search(self, query: str, k: int) -> None:
